@@ -1,6 +1,18 @@
-# FBR Invoice Submission API - Postman Collection
+# FBR Invoice Submission API
 
-This Postman collection allows you to submit invoices to the Federal Board of Revenue (FBR) API.
+This repository contains tools for submitting invoices to the Federal Board of Revenue (FBR) API, including:
+- **Postman Collection** - For API testing in Postman
+- **Web Application** - HTML-based invoice submission tool (deployable to GitHub Pages)
+
+## 🌐 Live Web Application
+
+The web application (`index.html`) can be deployed to GitHub Pages for easy access.
+
+### Quick Deploy to GitHub Pages:
+1. Push this repository to GitHub
+2. Go to Repository Settings → Pages
+3. Select branch: `main` and folder: `/ (root)`
+4. Your app will be live at: `https://yourusername.github.io/repository-name`
 
 ## Setup Instructions
 
