@@ -1,0 +1,21 @@
+# Netlify configuration file
+# This file helps configure your Netlify deployment
+
+[build]
+  # Since this is a static HTML file, no build command needed
+  publish = "."
+
+[[redirects]]
+  # Redirect root to index.html
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

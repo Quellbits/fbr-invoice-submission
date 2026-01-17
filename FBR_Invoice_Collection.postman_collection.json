@@ -1,0 +1,341 @@
+{
+	"info": {
+		"_postman_id": "fbr-invoice-collection-001",
+		"name": "FBR Invoice Submission API",
+		"description": "Collection for submitting invoices to FBR (Federal Board of Revenue) API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Get Access Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.access_token) {",
+									"        pm.environment.set('access_token', response.access_token);",
+									"        console.log('Access token saved to environment');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{client_id}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{client_secret}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "invoice_submit",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{fbr_base_url}}/oauth/token",
+							"host": [
+								"{{fbr_base_url}}"
+							],
+							"path": [
+								"oauth",
+								"token"
+							]
+						},
+						"description": "Get OAuth access token for FBR API authentication"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Invoice Submission",
+			"item": [
+				{
+					"name": "Submit Single Invoice",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Ensure access token is available",
+									"const token = pm.environment.get('access_token');",
+									"if (!token) {",
+									"    console.warn('Access token not found. Please run Get Access Token request first.');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200 or 201', function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									"",
+									"if (pm.response.code === 200 || pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('last_invoice_id', response.invoice_id || response.id);",
+									"    console.log('Invoice submitted successfully:', response);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"invoicetype\": \"Sale Invoice\",\n    \"invoicedate\": \"2025-06-25\",\n    \"__invariant\": \"Items[0].Quantity\",\n    \"invoicerefno\": \"112233\",\n    \"sellerntncnic\": \"1300779\",\n    \"sellerbusinessname\": \"Biologic Medical Systems\",\n    \"sellerprovince\": \"Sindh\",\n    \"selleraddress\": \"Zeenat house/Plot # 224, Block 2, P.E.C.H.S, Karachi\",\n    \"buyerntncnic\": \"1300778\",\n    \"buyerbusinessname\": \"Al-Mustafa\",\n    \"buyerprovince\": \"Sindh\",\n    \"buyeraddress\": \"default\",\n    \"buyerregistrationtype\": \"Registered\",\n    \"items\": [\n        {\n            \"hsCode\": \"0101.2100\",\n            \"productDescription\": \"TOCO Transducer Probe CT BD-4000XS\",\n            \"rate\": \"18%\",\n            \"uoM\": \"Numbers, pieces, units\",\n            \"quantity\": \"10\",\n            \"totalValues\": \"0.00\",\n            \"valueSalesExcludingST\": \"2000.00\",\n            \"salesTaxApplicable\": \"360.00\",\n            \"saleType\": \"Goods at standard rate (default)\",\n            \"fixedNotifiedValueOrRetailPrice\": \"0.00\",\n            \"salesTaxWithheldAtSource\": \"0.00\",\n            \"extraTax\": \"\",\n            \"furtherTax\": \"0.00\",\n            \"sroScheduleNo\": \"\",\n            \"fedPayable\": \"0.00\",\n            \"discount\": \"0.00\",\n            \"sroItemSerialNo\": \"\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "https://gw.fbr.gov.pk/di_data/v1/di/postinvoicedata",
+							"host": [
+								"gw.fbr.gov.pk"
+							],
+							"path": [
+								"di_data",
+								"v1",
+								"di",
+								"postinvoicedata"
+							]
+						},
+						"description": "Submit a single invoice to FBR"
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Bulk Invoices",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get('access_token');",
+									"if (!token) {",
+									"    console.warn('Access token not found. Please run Get Access Token request first.');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"invoices\": [\n        {\n            \"invoice_number\": \"INV-001\",\n            \"invoice_date\": \"2024-01-15T10:30:00Z\",\n            \"seller_name\": \"{{seller_name}}\",\n            \"seller_ntn\": \"{{seller_ntn}}\",\n            \"buyer_name\": \"Buyer Company 1\",\n            \"buyer_ntn\": \"1234567-8\",\n            \"items\": [\n                {\n                    \"item_code\": \"ITEM001\",\n                    \"item_name\": \"Product 1\",\n                    \"quantity\": 5,\n                    \"unit_price\": 100.00,\n                    \"total_price\": 500.00,\n                    \"sales_tax\": 80.00\n                }\n            ],\n            \"sub_total\": 500.00,\n            \"sales_tax_total\": 80.00,\n            \"grand_total\": 580.00,\n            \"currency\": \"PKR\"\n        },\n        {\n            \"invoice_number\": \"INV-002\",\n            \"invoice_date\": \"2024-01-15T11:00:00Z\",\n            \"seller_name\": \"{{seller_name}}\",\n            \"seller_ntn\": \"{{seller_ntn}}\",\n            \"buyer_name\": \"Buyer Company 2\",\n            \"buyer_ntn\": \"7654321-2\",\n            \"items\": [\n                {\n                    \"item_code\": \"ITEM002\",\n                    \"item_name\": \"Product 2\",\n                    \"quantity\": 3,\n                    \"unit_price\": 200.00,\n                    \"total_price\": 600.00,\n                    \"sales_tax\": 96.00\n                }\n            ],\n            \"sub_total\": 600.00,\n            \"sales_tax_total\": 96.00,\n            \"grand_total\": 696.00,\n            \"currency\": \"PKR\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{fbr_base_url}}/api/v1/invoices/bulk",
+							"host": [
+								"{{fbr_base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"invoices",
+								"bulk"
+							]
+						},
+						"description": "Submit multiple invoices in a single request"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Invoice Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{fbr_base_url}}/api/v1/invoices/{{last_invoice_id}}",
+							"host": [
+								"{{fbr_base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"invoices",
+								"{{last_invoice_id}}"
+							]
+						},
+						"description": "Check the status of a submitted invoice"
+					},
+					"response": []
+				},
+				{
+					"name": "List Invoices",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{fbr_base_url}}/api/v1/invoices?page=1&limit=10&start_date={{start_date}}&end_date={{end_date}}",
+							"host": [
+								"{{fbr_base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"invoices"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "start_date",
+									"value": "{{start_date}}"
+								},
+								{
+									"key": "end_date",
+									"value": "{{end_date}}"
+								}
+							]
+						},
+						"description": "List all invoices with pagination and date filters"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "fbr_base_url",
+			"value": "https://gw.fbr.gov.pk",
+			"type": "string"
+		}
+	]
+}

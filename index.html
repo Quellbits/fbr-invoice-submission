@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FBR Invoice Submission Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .status {
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .token-display {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .item-row {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .add-item-btn {
+            background: #17a2b8;
+            margin-top: 10px;
+        }
+
+        .remove-item-btn {
+            background: #dc3545;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ FBR Invoice Submission API Tester</h1>
+            <p>Test and submit invoices to Federal Board of Revenue API</p>
+        </div>
+
+        <div class="content">
+            <!-- Configuration Section -->
+            <div class="section">
+                <h2>⚙️ API Configuration</h2>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>FBR Base URL:</label>
+                        <input type="text" id="fbr_base_url" value="https://gw.fbr.gov.pk" placeholder="https://gw.fbr.gov.pk">
+                    </div>
+                    <div class="form-group">
+                        <label>Client ID:</label>
+                        <input type="text" id="client_id" placeholder="Your Client ID">
+                    </div>
+                    <div class="form-group">
+                        <label>Client Secret:</label>
+                        <input type="password" id="client_secret" placeholder="Your Client Secret">
+                    </div>
+                    <div class="form-group">
+                        <label>Seller NTN:</label>
+                        <input type="text" id="seller_ntn" value="1234567-8" placeholder="1234567-8">
+                    </div>
+                </div>
+                <button class="btn" onclick="saveConfig()">💾 Save Configuration</button>
+            </div>
+
+            <!-- Authentication Section -->
+            <div class="section">
+                <h2>🔐 Authentication</h2>
+                <div class="form-group">
+                    <label>Access Token (or get new one below):</label>
+                    <input type="text" id="access_token_input" value="9bad1dcc-914f-3b23-96c4-a22c758a2ee8" placeholder="Enter your access token">
+                </div>
+                <button class="btn" onclick="saveToken()">💾 Save Token</button>
+                <button class="btn btn-success" onclick="getAccessToken()">Get New Access Token</button>
+                <div id="token-status"></div>
+                <div id="token-display" class="token-display" style="display: none;"></div>
+            </div>
+
+            <!-- Invoice Submission Section -->
+            <div class="section">
+                <h2>📄 Submit Invoice</h2>
+                
+                <h3 style="margin-top: 10px; margin-bottom: 15px; color: #667eea;">Invoice Details</h3>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Invoice Type:</label>
+                        <select id="invoicetype">
+                            <option value="Sale Invoice" selected>Sale Invoice</option>
+                            <option value="Purchase Invoice">Purchase Invoice</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Invoice Date:</label>
+                        <input type="date" id="invoicedate" value="2025-06-25">
+                    </div>
+                    <div class="form-group">
+                        <label>Invoice Reference No:</label>
+                        <input type="text" id="invoicerefno" value="112233" placeholder="112233">
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 20px; margin-bottom: 15px; color: #667eea;">Seller Information</h3>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Seller NTN/CNIC:</label>
+                        <input type="text" id="sellerntncnic" value="1300779" placeholder="1300779">
+                    </div>
+                    <div class="form-group">
+                        <label>Seller Business Name:</label>
+                        <input type="text" id="sellerbusinessname" value="Biologic Medical Systems" placeholder="Biologic Medical Systems">
+                    </div>
+                    <div class="form-group">
+                        <label>Seller Province:</label>
+                        <input type="text" id="sellerprovince" value="Sindh" placeholder="Sindh">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Seller Address:</label>
+                    <input type="text" id="selleraddress" value="Zeenat house/Plot # 224, Block 2, P.E.C.H.S, Karachi" placeholder="Full address">
+                </div>
+
+                <h3 style="margin-top: 20px; margin-bottom: 15px; color: #667eea;">Buyer Information</h3>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Buyer NTN/CNIC:</label>
+                        <input type="text" id="buyerntncnic" value="1300778" placeholder="1300778">
+                    </div>
+                    <div class="form-group">
+                        <label>Buyer Business Name:</label>
+                        <input type="text" id="buyerbusinessname" value="Al-Mustafa" placeholder="Al-Mustafa">
+                    </div>
+                    <div class="form-group">
+                        <label>Buyer Province:</label>
+                        <input type="text" id="buyerprovince" value="Sindh" placeholder="Sindh">
+                    </div>
+                    <div class="form-group">
+                        <label>Buyer Registration Type:</label>
+                        <select id="buyerregistrationtype">
+                            <option value="Registered" selected>Registered</option>
+                            <option value="Unregistered">Unregistered</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Buyer Address:</label>
+                    <input type="text" id="buyeraddress" value="default" placeholder="Buyer address">
+                </div>
+
+                <h3 style="margin-top: 20px; margin-bottom: 15px; color: #667eea;">Items</h3>
+                <div id="items-container">
+                    <div class="item-row">
+                        <div class="grid">
+                            <div class="form-group">
+                                <label>HS Code:</label>
+                                <input type="text" class="item-hsCode" value="0101.2100" placeholder="0101.2100">
+                            </div>
+                            <div class="form-group">
+                                <label>Product Description:</label>
+                                <input type="text" class="item-productDescription" value="TOCO Transducer Probe CT BD-4000XS" placeholder="Product description">
+                            </div>
+                            <div class="form-group">
+                                <label>Rate:</label>
+                                <input type="text" class="item-rate" value="18%" placeholder="18%">
+                            </div>
+                            <div class="form-group">
+                                <label>Unit of Measure (UoM):</label>
+                                <input type="text" class="item-uoM" value="Numbers, pieces, units" placeholder="Numbers, pieces, units">
+                            </div>
+                            <div class="form-group">
+                                <label>Quantity:</label>
+                                <input type="text" class="item-quantity" value="10" placeholder="10">
+                            </div>
+                            <div class="form-group">
+                                <label>Total Values:</label>
+                                <input type="text" class="item-totalValues" value="0.00" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label>Value Sales Excluding ST:</label>
+                                <input type="text" class="item-valueSalesExcludingST" value="2000.00" placeholder="2000.00">
+                            </div>
+                            <div class="form-group">
+                                <label>Sales Tax Applicable:</label>
+                                <input type="text" class="item-salesTaxApplicable" value="360.00" placeholder="360.00">
+                            </div>
+                            <div class="form-group">
+                                <label>Sale Type:</label>
+                                <input type="text" class="item-saleType" value="Goods at standard rate (default)" placeholder="Goods at standard rate (default)">
+                            </div>
+                            <div class="form-group">
+                                <label>Fixed Notified Value/Retail Price:</label>
+                                <input type="text" class="item-fixedNotifiedValueOrRetailPrice" value="0.00" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label>Sales Tax Withheld at Source:</label>
+                                <input type="text" class="item-salesTaxWithheldAtSource" value="0.00" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label>Extra Tax:</label>
+                                <input type="text" class="item-extraTax" value="" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label>Further Tax:</label>
+                                <input type="text" class="item-furtherTax" value="0.00" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label>SRO Schedule No:</label>
+                                <input type="text" class="item-sroScheduleNo" value="" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label>FED Payable:</label>
+                                <input type="text" class="item-fedPayable" value="0.00" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label>Discount:</label>
+                                <input type="text" class="item-discount" value="0.00" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label>SRO Item Serial No:</label>
+                                <input type="text" class="item-sroItemSerialNo" value="" placeholder="">
+                            </div>
+                        </div>
+                        <button class="btn remove-item-btn" onclick="this.parentElement.remove();">Remove Item</button>
+                    </div>
+                </div>
+                <button class="btn add-item-btn" onclick="addItem()">+ Add Item</button>
+
+                <button class="btn btn-success" onclick="submitInvoice()" style="margin-top: 20px;">📤 Submit Invoice</button>
+            </div>
+
+            <!-- Response Section -->
+            <div class="section">
+                <h2>📥 Response</h2>
+                <div id="response-status"></div>
+                <div id="response" class="response" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('invoicedate').value = today;
+        
+        // Load saved config
+        function loadConfig() {
+            const config = JSON.parse(localStorage.getItem('fbr_config') || '{}');
+            if (config.fbr_base_url) document.getElementById('fbr_base_url').value = config.fbr_base_url;
+            if (config.client_id) document.getElementById('client_id').value = config.client_id;
+            if (config.access_token) {
+                document.getElementById('access_token_input').value = config.access_token;
+                document.getElementById('token-display').style.display = 'block';
+                document.getElementById('token-display').textContent = 'Token: ' + config.access_token.substring(0, 30) + '...';
+            }
+        }
+
+        function saveConfig() {
+            const config = {
+                fbr_base_url: document.getElementById('fbr_base_url').value,
+                client_id: document.getElementById('client_id').value
+            };
+            localStorage.setItem('fbr_config', JSON.stringify(config));
+            showStatus('token-status', 'Configuration saved!', 'success');
+        }
+
+        function saveToken() {
+            const token = document.getElementById('access_token_input').value;
+            if (!token) {
+                showStatus('token-status', 'Please enter an access token', 'error');
+                return;
+            }
+            const config = JSON.parse(localStorage.getItem('fbr_config') || '{}');
+            config.access_token = token;
+            localStorage.setItem('fbr_config', JSON.stringify(config));
+            document.getElementById('token-display').style.display = 'block';
+            document.getElementById('token-display').textContent = 'Token: ' + token.substring(0, 30) + '...';
+            showStatus('token-status', 'Access token saved!', 'success');
+        }
+
+        async function getAccessToken() {
+            const baseUrl = document.getElementById('fbr_base_url').value;
+            const clientId = document.getElementById('client_id').value;
+            const clientSecret = document.getElementById('client_secret').value;
+
+            if (!clientId || !clientSecret) {
+                showStatus('token-status', 'Please enter Client ID and Client Secret', 'error');
+                return;
+            }
+
+            showStatus('token-status', 'Requesting access token...', 'info');
+
+            try {
+                const credentials = btoa(`${clientId}:${clientSecret}`);
+                const response = await fetch(`${baseUrl}/oauth/token`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': `Basic ${credentials}`
+                    },
+                    body: new URLSearchParams({
+                        grant_type: 'client_credentials',
+                        scope: 'invoice_submit'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.access_token) {
+                    const config = JSON.parse(localStorage.getItem('fbr_config') || '{}');
+                    config.access_token = data.access_token;
+                    localStorage.setItem('fbr_config', JSON.stringify(config));
+                    
+                    // Update input field
+                    document.getElementById('access_token_input').value = data.access_token;
+                    
+                    document.getElementById('token-display').style.display = 'block';
+                    document.getElementById('token-display').textContent = 'Token: ' + data.access_token.substring(0, 30) + '...';
+                    showStatus('token-status', 'Access token obtained successfully!', 'success');
+                } else {
+                    showStatus('token-status', 'Error: ' + (data.error_description || data.error || 'Failed to get token'), 'error');
+                    showResponse(data);
+                }
+            } catch (error) {
+                showStatus('token-status', 'Error: ' + error.message, 'error');
+                showResponse({ error: error.message });
+            }
+        }
+
+        async function submitInvoice() {
+            const config = JSON.parse(localStorage.getItem('fbr_config') || '{}');
+            // Check input field first, then config
+            const tokenInput = document.getElementById('access_token_input').value;
+            const accessToken = tokenInput || config.access_token;
+            
+            if (!accessToken) {
+                showStatus('response-status', 'Please enter or save an access token first!', 'error');
+                return;
+            }
+
+            const invoiceData = buildInvoiceData();
+            if (!invoiceData) return;
+
+            showStatus('response-status', 'Submitting invoice...', 'info');
+
+            try {
+                const invoiceEndpoint = 'https://gw.fbr.gov.pk/di_data/v1/di/postinvoicedata';
+                const response = await fetch(invoiceEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify(invoiceData)
+                });
+
+                let data;
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    const text = await response.text();
+                    try {
+                        data = JSON.parse(text);
+                    } catch {
+                        data = { response: text };
+                    }
+                }
+                
+                if (response.ok) {
+                    showStatus('response-status', 'Invoice submitted successfully!', 'success');
+                    if (data.invoice_id || data.id) {
+                        config.last_invoice_id = data.invoice_id || data.id;
+                        localStorage.setItem('fbr_config', JSON.stringify(config));
+                    }
+                } else {
+                    showStatus('response-status', `Error ${response.status}: ${data.message || data.error || 'Failed to submit invoice'}`, 'error');
+                }
+                
+                showResponse(data);
+            } catch (error) {
+                showStatus('response-status', 'Error: ' + error.message, 'error');
+                showResponse({ error: error.message });
+            }
+        }
+
+        function buildInvoiceData() {
+            const items = [];
+            const itemRows = document.querySelectorAll('.item-row');
+            
+            itemRows.forEach(row => {
+                items.push({
+                    hsCode: row.querySelector('.item-hsCode').value || '',
+                    productDescription: row.querySelector('.item-productDescription').value || '',
+                    rate: row.querySelector('.item-rate').value || '',
+                    uoM: row.querySelector('.item-uoM').value || '',
+                    quantity: row.querySelector('.item-quantity').value || '',
+                    totalValues: row.querySelector('.item-totalValues').value || '0.00',
+                    valueSalesExcludingST: row.querySelector('.item-valueSalesExcludingST').value || '0.00',
+                    salesTaxApplicable: row.querySelector('.item-salesTaxApplicable').value || '0.00',
+                    saleType: row.querySelector('.item-saleType').value || '',
+                    fixedNotifiedValueOrRetailPrice: row.querySelector('.item-fixedNotifiedValueOrRetailPrice').value || '0.00',
+                    salesTaxWithheldAtSource: row.querySelector('.item-salesTaxWithheldAtSource').value || '0.00',
+                    extraTax: row.querySelector('.item-extraTax').value || '',
+                    furtherTax: row.querySelector('.item-furtherTax').value || '0.00',
+                    sroScheduleNo: row.querySelector('.item-sroScheduleNo').value || '',
+                    fedPayable: row.querySelector('.item-fedPayable').value || '0.00',
+                    discount: row.querySelector('.item-discount').value || '0.00',
+                    sroItemSerialNo: row.querySelector('.item-sroItemSerialNo').value || ''
+                });
+            });
+
+            if (items.length === 0) {
+                showStatus('response-status', 'Please add at least one item', 'error');
+                return null;
+            }
+
+            const invoiceDate = document.getElementById('invoicedate').value;
+
+            return {
+                invoicetype: document.getElementById('invoicetype').value || 'Sale Invoice',
+                invoicedate: invoiceDate,
+                __invariant: 'Items[0].Quantity',
+                invoicerefno: document.getElementById('invoicerefno').value || '',
+                sellerntncnic: document.getElementById('sellerntncnic').value || '',
+                sellerbusinessname: document.getElementById('sellerbusinessname').value || '',
+                sellerprovince: document.getElementById('sellerprovince').value || '',
+                selleraddress: document.getElementById('selleraddress').value || '',
+                buyerntncnic: document.getElementById('buyerntncnic').value || '',
+                buyerbusinessname: document.getElementById('buyerbusinessname').value || '',
+                buyerprovince: document.getElementById('buyerprovince').value || '',
+                buyeraddress: document.getElementById('buyeraddress').value || '',
+                buyerregistrationtype: document.getElementById('buyerregistrationtype').value || 'Registered',
+                items: items
+            };
+        }
+
+        function addItem() {
+            const container = document.getElementById('items-container');
+            const newItem = document.createElement('div');
+            newItem.className = 'item-row';
+            newItem.innerHTML = `
+                <div class="grid">
+                    <div class="form-group">
+                        <label>HS Code:</label>
+                        <input type="text" class="item-hsCode" value="0101.2100" placeholder="0101.2100">
+                    </div>
+                    <div class="form-group">
+                        <label>Product Description:</label>
+                        <input type="text" class="item-productDescription" value="TOCO Transducer Probe CT BD-4000XS" placeholder="Product description">
+                    </div>
+                    <div class="form-group">
+                        <label>Rate:</label>
+                        <input type="text" class="item-rate" value="18%" placeholder="18%">
+                    </div>
+                    <div class="form-group">
+                        <label>Unit of Measure (UoM):</label>
+                        <input type="text" class="item-uoM" value="Numbers, pieces, units" placeholder="Numbers, pieces, units">
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity:</label>
+                        <input type="text" class="item-quantity" value="10" placeholder="10">
+                    </div>
+                    <div class="form-group">
+                        <label>Total Values:</label>
+                        <input type="text" class="item-totalValues" value="0.00" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Value Sales Excluding ST:</label>
+                        <input type="text" class="item-valueSalesExcludingST" value="2000.00" placeholder="2000.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Sales Tax Applicable:</label>
+                        <input type="text" class="item-salesTaxApplicable" value="360.00" placeholder="360.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Sale Type:</label>
+                        <input type="text" class="item-saleType" value="Goods at standard rate (default)" placeholder="Goods at standard rate (default)">
+                    </div>
+                    <div class="form-group">
+                        <label>Fixed Notified Value/Retail Price:</label>
+                        <input type="text" class="item-fixedNotifiedValueOrRetailPrice" value="0.00" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Sales Tax Withheld at Source:</label>
+                        <input type="text" class="item-salesTaxWithheldAtSource" value="0.00" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Extra Tax:</label>
+                        <input type="text" class="item-extraTax" value="" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label>Further Tax:</label>
+                        <input type="text" class="item-furtherTax" value="0.00" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>SRO Schedule No:</label>
+                        <input type="text" class="item-sroScheduleNo" value="" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label>FED Payable:</label>
+                        <input type="text" class="item-fedPayable" value="0.00" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Discount:</label>
+                        <input type="text" class="item-discount" value="0.00" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>SRO Item Serial No:</label>
+                        <input type="text" class="item-sroItemSerialNo" value="" placeholder="">
+                    </div>
+                </div>
+                <button class="btn remove-item-btn" onclick="this.parentElement.remove();">Remove Item</button>
+            `;
+            container.appendChild(newItem);
+        }
+
+        function showStatus(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function showResponse(data) {
+            const responseDiv = document.getElementById('response');
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = JSON.stringify(data, null, 2);
+        }
+
+        // Load config on page load
+        loadConfig();
+    </script>
+</body>
+</html>
