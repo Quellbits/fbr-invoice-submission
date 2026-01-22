@@ -238,7 +238,7 @@
                 <h2>🔐 Authentication</h2>
                 <div class="form-group">
                     <label>Access Token (or get new one below):</label>
-                    <input type="text" id="access_token_input" value="9bad1dcc-914f-3b23-96c4-a22c758a2ee8" placeholder="Enter your access token">
+                    <input type="text" id="access_token_input" placeholder="Enter your access token">
                 </div>
                 <button class="btn" onclick="saveToken()">💾 Save Token</button>
                 <button class="btn btn-success" onclick="getAccessToken()">Get New Access Token</button>
@@ -255,17 +255,18 @@
                     <div class="form-group">
                         <label>Invoice Type:</label>
                         <select id="invoicetype">
-                            <option value="Sale Invoice" selected>Sale Invoice</option>
+                            <option value="" selected disabled>Select invoice type</option>
+                            <option value="Sale Invoice">Sale Invoice</option>
                             <option value="Purchase Invoice">Purchase Invoice</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Invoice Date:</label>
-                        <input type="date" id="invoicedate" value="2025-06-25">
+                        <input type="date" id="invoicedate">
                     </div>
                     <div class="form-group">
                         <label>Invoice Reference No:</label>
-                        <input type="text" id="invoicerefno" value="112233" placeholder="112233">
+                        <input type="text" id="invoicerefno" placeholder="Invoice reference number">
                     </div>
                 </div>
 
@@ -273,47 +274,48 @@
                 <div class="grid">
                     <div class="form-group">
                         <label>Seller NTN/CNIC:</label>
-                        <input type="text" id="sellerntncnic" value="1300779" placeholder="1300779">
+                        <input type="text" id="sellerntncnic" value="1300779" readonly>
                     </div>
                     <div class="form-group">
                         <label>Seller Business Name:</label>
-                        <input type="text" id="sellerbusinessname" value="Biologic Medical Systems" placeholder="Biologic Medical Systems">
+                        <input type="text" id="sellerbusinessname" value="Biologic Medical Systems" readonly>
                     </div>
                     <div class="form-group">
                         <label>Seller Province:</label>
-                        <input type="text" id="sellerprovince" value="Sindh" placeholder="Sindh">
+                        <input type="text" id="sellerprovince" value="Sindh" readonly>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Seller Address:</label>
-                    <input type="text" id="selleraddress" value="Zeenat house/Plot # 224, Block 2, P.E.C.H.S, Karachi" placeholder="Full address">
+                    <input type="text" id="selleraddress" value="Zeenat house/Plot # 224, Block 2, P.E.C.H.S, Karachi" readonly>
                 </div>
 
                 <h3 style="margin-top: 20px; margin-bottom: 15px; color: #667eea;">Buyer Information</h3>
                 <div class="grid">
                     <div class="form-group">
                         <label>Buyer NTN/CNIC:</label>
-                        <input type="text" id="buyerntncnic" value="1300778" placeholder="1300778">
+                        <input type="text" id="buyerntncnic" placeholder="Buyer NTN/CNIC">
                     </div>
                     <div class="form-group">
                         <label>Buyer Business Name:</label>
-                        <input type="text" id="buyerbusinessname" value="Al-Mustafa" placeholder="Al-Mustafa">
+                        <input type="text" id="buyerbusinessname" placeholder="Buyer business name">
                     </div>
                     <div class="form-group">
                         <label>Buyer Province:</label>
-                        <input type="text" id="buyerprovince" value="Sindh" placeholder="Sindh">
+                        <input type="text" id="buyerprovince" placeholder="Buyer province">
                     </div>
                     <div class="form-group">
                         <label>Buyer Registration Type:</label>
                         <select id="buyerregistrationtype">
-                            <option value="Registered" selected>Registered</option>
+                            <option value="" selected disabled>Select registration type</option>
+                            <option value="Registered">Registered</option>
                             <option value="Unregistered">Unregistered</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Buyer Address:</label>
-                    <input type="text" id="buyeraddress" value="default" placeholder="Buyer address">
+                    <input type="text" id="buyeraddress" placeholder="Buyer address">
                 </div>
 
                 <h3 style="margin-top: 20px; margin-bottom: 15px; color: #667eea;">Items</h3>
@@ -323,83 +325,86 @@
                             <div class="form-group">
                                 <label>HS Code:</label>
                                 <select class="item-hsCode">
-                                    <option value="9018.9090" selected>9018.9090</option>
+                                    <option value="" selected disabled>Select HS Code</option>
+                                    <option value="9018.9090">9018.9090</option>
                                     <option value="9018.1900">9018.1900</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Product Description:</label>
-                                <input type="text" class="item-productDescription" value="TOCO Transducer Probe CT BD-4000XS" placeholder="Product description">
+                                <input type="text" class="item-productDescription" placeholder="Product description">
                             </div>
                             <div class="form-group">
                                 <label>Rate:</label>
                                 <select class="item-rate">
+                                    <option value="" selected disabled>Select rate</option>
                                     <option value="Exempt">Exempt</option>
                                     <option value="5%">5%</option>
                                     <option value="12%">12%</option>
                                     <option value="15%">15%</option>
-                                    <option value="18%" selected>18%</option>
+                                    <option value="18%">18%</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Unit of Measure (UoM):</label>
-                                <input type="text" class="item-uoM" value="Numbers, pieces, units" placeholder="Numbers, pieces, units">
+                                <input type="text" class="item-uoM" placeholder="Numbers, pieces, units">
                             </div>
                             <div class="form-group">
                                 <label>Quantity:</label>
-                                <input type="text" class="item-quantity" value="10" placeholder="10">
+                                <input type="text" class="item-quantity" placeholder="Quantity">
                             </div>
                             <div class="form-group">
                                 <label>Total Values:</label>
-                                <input type="text" class="item-totalValues" value="0.00" placeholder="0.00">
+                                <input type="text" class="item-totalValues" placeholder="0.00">
                             </div>
                             <div class="form-group">
                                 <label>Value Sales Excluding ST:</label>
-                                <input type="text" class="item-valueSalesExcludingST" value="2000.00" placeholder="2000.00">
+                                <input type="text" class="item-valueSalesExcludingST" placeholder="0.00">
                             </div>
                             <div class="form-group">
                                 <label>Sales Tax Applicable:</label>
-                                <input type="text" class="item-salesTaxApplicable" value="360.00" placeholder="360.00">
+                                <input type="text" class="item-salesTaxApplicable" placeholder="0.00">
                             </div>
                             <div class="form-group">
                                 <label>Sale Type:</label>
                                 <select class="item-saleType">
-                                    <option value="Goods at standard rate (default)" selected>Goods at standard rate (default)</option>
+                                    <option value="" selected disabled>Select sale type</option>
+                                    <option value="Goods at standard rate (default)">Goods at standard rate (default)</option>
                                     <option value="Exempt goods">Exempt goods</option>
                                     <option value="Goods at zero-rate">Goods at zero-rate</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Fixed Notified Value/Retail Price:</label>
-                                <input type="text" class="item-fixedNotifiedValueOrRetailPrice" value="0.00" placeholder="0.00">
+                                <input type="text" class="item-fixedNotifiedValueOrRetailPrice" placeholder="0.00">
                             </div>
                             <div class="form-group">
                                 <label>Sales Tax Withheld at Source:</label>
-                                <input type="text" class="item-salesTaxWithheldAtSource" value="0.00" placeholder="0.00">
+                                <input type="text" class="item-salesTaxWithheldAtSource" placeholder="0.00">
                             </div>
                             <div class="form-group">
                                 <label>Extra Tax:</label>
-                                <input type="text" class="item-extraTax" value="" placeholder="">
+                                <input type="text" class="item-extraTax" placeholder="">
                             </div>
                             <div class="form-group">
                                 <label>Further Tax:</label>
-                                <input type="text" class="item-furtherTax" value="0.00" placeholder="0.00">
+                                <input type="text" class="item-furtherTax" placeholder="0.00">
                             </div>
                             <div class="form-group">
                                 <label>SRO Schedule No:</label>
-                                <input type="text" class="item-sroScheduleNo" value="" placeholder="">
+                                <input type="text" class="item-sroScheduleNo" placeholder="">
                             </div>
                             <div class="form-group">
                                 <label>FED Payable:</label>
-                                <input type="text" class="item-fedPayable" value="0.00" placeholder="0.00">
+                                <input type="text" class="item-fedPayable" placeholder="0.00">
                             </div>
                             <div class="form-group">
                                 <label>Discount:</label>
-                                <input type="text" class="item-discount" value="0.00" placeholder="0.00">
+                                <input type="text" class="item-discount" placeholder="0.00">
                             </div>
                             <div class="form-group">
                                 <label>SRO Item Serial No:</label>
-                                <input type="text" class="item-sroItemSerialNo" value="" placeholder="">
+                                <input type="text" class="item-sroItemSerialNo" placeholder="">
                             </div>
                         </div>
                         <button class="btn remove-item-btn" onclick="this.parentElement.remove();">Remove Item</button>
@@ -420,10 +425,6 @@
     </div>
 
     <script>
-        // Initialize
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('invoicedate').value = today;
-
         function formatWithGroupSeparator(rawValue) {
             const cleaned = String(rawValue || "").replace(/,/g, "");
             if (cleaned === "") return "";
@@ -432,6 +433,10 @@
             const decimalPart = parts.length > 1 ? parts[1].replace(/\D/g, "") : "";
             const withCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             return decimalPart ? `${withCommas}.${decimalPart}` : withCommas;
+        }
+
+        function stripGroupSeparators(rawValue) {
+            return String(rawValue || "").replace(/,/g, "").trim();
         }
 
         function attachGroupedNumberFormatting(root = document) {
@@ -605,18 +610,18 @@
                     productDescription: row.querySelector('.item-productDescription').value || '',
                     rate: row.querySelector('.item-rate').value || '',
                     uoM: row.querySelector('.item-uoM').value || '',
-                    quantity: row.querySelector('.item-quantity').value || '',
-                    totalValues: row.querySelector('.item-totalValues').value || '0.00',
-                    valueSalesExcludingST: row.querySelector('.item-valueSalesExcludingST').value || '0.00',
-                    salesTaxApplicable: row.querySelector('.item-salesTaxApplicable').value || '0.00',
+                    quantity: stripGroupSeparators(row.querySelector('.item-quantity').value || ''),
+                    totalValues: stripGroupSeparators(row.querySelector('.item-totalValues').value || '0.00'),
+                    valueSalesExcludingST: stripGroupSeparators(row.querySelector('.item-valueSalesExcludingST').value || '0.00'),
+                    salesTaxApplicable: stripGroupSeparators(row.querySelector('.item-salesTaxApplicable').value || '0.00'),
                     saleType: row.querySelector('.item-saleType').value || '',
-                    fixedNotifiedValueOrRetailPrice: row.querySelector('.item-fixedNotifiedValueOrRetailPrice').value || '0.00',
-                    salesTaxWithheldAtSource: row.querySelector('.item-salesTaxWithheldAtSource').value || '0.00',
+                    fixedNotifiedValueOrRetailPrice: stripGroupSeparators(row.querySelector('.item-fixedNotifiedValueOrRetailPrice').value || '0.00'),
+                    salesTaxWithheldAtSource: stripGroupSeparators(row.querySelector('.item-salesTaxWithheldAtSource').value || '0.00'),
                     extraTax: row.querySelector('.item-extraTax').value || '',
-                    furtherTax: row.querySelector('.item-furtherTax').value || '0.00',
+                    furtherTax: stripGroupSeparators(row.querySelector('.item-furtherTax').value || '0.00'),
                     sroScheduleNo: row.querySelector('.item-sroScheduleNo').value || '',
-                    fedPayable: row.querySelector('.item-fedPayable').value || '0.00',
-                    discount: row.querySelector('.item-discount').value || '0.00',
+                    fedPayable: stripGroupSeparators(row.querySelector('.item-fedPayable').value || '0.00'),
+                    discount: stripGroupSeparators(row.querySelector('.item-discount').value || '0.00'),
                     sroItemSerialNo: row.querySelector('.item-sroItemSerialNo').value || ''
                 });
             });
@@ -629,7 +634,7 @@
             const invoiceDate = document.getElementById('invoicedate').value;
 
             return {
-                invoicetype: document.getElementById('invoicetype').value || 'Sale Invoice',
+                invoicetype: document.getElementById('invoicetype').value || '',
                 invoicedate: invoiceDate,
                 __invariant: 'Items[0].Quantity',
                 invoicerefno: document.getElementById('invoicerefno').value || '',
@@ -641,7 +646,7 @@
                 buyerbusinessname: document.getElementById('buyerbusinessname').value || '',
                 buyerprovince: document.getElementById('buyerprovince').value || '',
                 buyeraddress: document.getElementById('buyeraddress').value || '',
-                buyerregistrationtype: document.getElementById('buyerregistrationtype').value || 'Registered',
+                buyerregistrationtype: document.getElementById('buyerregistrationtype').value || '',
                 items: items
             };
         }
@@ -655,83 +660,86 @@
                     <div class="form-group">
                         <label>HS Code:</label>
                         <select class="item-hsCode">
-                            <option value="9018.9090" selected>9018.9090</option>
+                            <option value="" selected disabled>Select HS Code</option>
+                            <option value="9018.9090">9018.9090</option>
                             <option value="9018.1900">9018.1900</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Product Description:</label>
-                        <input type="text" class="item-productDescription" value="TOCO Transducer Probe CT BD-4000XS" placeholder="Product description">
+                        <input type="text" class="item-productDescription" placeholder="Product description">
                     </div>
                     <div class="form-group">
                         <label>Rate:</label>
                         <select class="item-rate">
+                            <option value="" selected disabled>Select rate</option>
                             <option value="Exempt">Exempt</option>
                             <option value="5%">5%</option>
                             <option value="12%">12%</option>
                             <option value="15%">15%</option>
-                            <option value="18%" selected>18%</option>
+                            <option value="18%">18%</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Unit of Measure (UoM):</label>
-                        <input type="text" class="item-uoM" value="Numbers, pieces, units" placeholder="Numbers, pieces, units">
+                        <input type="text" class="item-uoM" placeholder="Numbers, pieces, units">
                     </div>
                     <div class="form-group">
                         <label>Quantity:</label>
-                        <input type="text" class="item-quantity" value="10" placeholder="10">
+                        <input type="text" class="item-quantity" placeholder="Quantity">
                     </div>
                     <div class="form-group">
                         <label>Total Values:</label>
-                        <input type="text" class="item-totalValues" value="0.00" placeholder="0.00">
+                        <input type="text" class="item-totalValues" placeholder="0.00">
                     </div>
                     <div class="form-group">
                         <label>Value Sales Excluding ST:</label>
-                        <input type="text" class="item-valueSalesExcludingST" value="2000.00" placeholder="2000.00">
+                        <input type="text" class="item-valueSalesExcludingST" placeholder="0.00">
                     </div>
                     <div class="form-group">
                         <label>Sales Tax Applicable:</label>
-                        <input type="text" class="item-salesTaxApplicable" value="360.00" placeholder="360.00">
+                        <input type="text" class="item-salesTaxApplicable" placeholder="0.00">
                     </div>
                     <div class="form-group">
                         <label>Sale Type:</label>
                         <select class="item-saleType">
-                            <option value="Goods at standard rate (default)" selected>Goods at standard rate (default)</option>
+                            <option value="" selected disabled>Select sale type</option>
+                            <option value="Goods at standard rate (default)">Goods at standard rate (default)</option>
                             <option value="Exempt goods">Exempt goods</option>
                             <option value="Goods at zero-rate">Goods at zero-rate</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Fixed Notified Value/Retail Price:</label>
-                        <input type="text" class="item-fixedNotifiedValueOrRetailPrice" value="0.00" placeholder="0.00">
+                        <input type="text" class="item-fixedNotifiedValueOrRetailPrice" placeholder="0.00">
                     </div>
                     <div class="form-group">
                         <label>Sales Tax Withheld at Source:</label>
-                        <input type="text" class="item-salesTaxWithheldAtSource" value="0.00" placeholder="0.00">
+                        <input type="text" class="item-salesTaxWithheldAtSource" placeholder="0.00">
                     </div>
                     <div class="form-group">
                         <label>Extra Tax:</label>
-                        <input type="text" class="item-extraTax" value="" placeholder="">
+                        <input type="text" class="item-extraTax" placeholder="">
                     </div>
                     <div class="form-group">
                         <label>Further Tax:</label>
-                        <input type="text" class="item-furtherTax" value="0.00" placeholder="0.00">
+                        <input type="text" class="item-furtherTax" placeholder="0.00">
                     </div>
                     <div class="form-group">
                         <label>SRO Schedule No:</label>
-                        <input type="text" class="item-sroScheduleNo" value="" placeholder="">
+                        <input type="text" class="item-sroScheduleNo" placeholder="">
                     </div>
                     <div class="form-group">
                         <label>FED Payable:</label>
-                        <input type="text" class="item-fedPayable" value="0.00" placeholder="0.00">
+                        <input type="text" class="item-fedPayable" placeholder="0.00">
                     </div>
                     <div class="form-group">
                         <label>Discount:</label>
-                        <input type="text" class="item-discount" value="0.00" placeholder="0.00">
+                        <input type="text" class="item-discount" placeholder="0.00">
                     </div>
                     <div class="form-group">
                         <label>SRO Item Serial No:</label>
-                        <input type="text" class="item-sroItemSerialNo" value="" placeholder="">
+                        <input type="text" class="item-sroItemSerialNo" placeholder="">
                     </div>
                 </div>
                 <button class="btn remove-item-btn" onclick="this.parentElement.remove();">Remove Item</button>
