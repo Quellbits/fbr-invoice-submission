@@ -82,6 +82,11 @@
             border-color: #667eea;
         }
 
+        .input-error {
+            border-color: #dc3545 !important;
+            background: #fff5f5;
+        }
+
         textarea {
             min-height: 150px;
             font-family: 'Courier New', monospace;
@@ -496,6 +501,68 @@
             showStatus('token-status', 'Access token saved!', 'success');
         }
 
+        function clearValidationErrors() {
+            document.querySelectorAll('.input-error').forEach((el) => {
+                el.classList.remove('input-error');
+            });
+        }
+
+        function markInvalid(field) {
+            if (!field) return;
+            field.classList.add('input-error');
+        }
+
+        function validateInvoiceForm() {
+            clearValidationErrors();
+            const errors = [];
+
+            const requiredField = (field, label) => {
+                if (!field || !field.value || field.value.trim() === '') {
+                    markInvalid(field);
+                    errors.push(label);
+                }
+            };
+
+            requiredField(document.getElementById('invoicetype'), 'Invoice Type');
+            requiredField(document.getElementById('invoicedate'), 'Invoice Date');
+            requiredField(document.getElementById('invoicerefno'), 'Invoice Reference No');
+            requiredField(document.getElementById('buyerntncnic'), 'Buyer NTN/CNIC');
+            requiredField(document.getElementById('buyerbusinessname'), 'Buyer Business Name');
+            requiredField(document.getElementById('buyerprovince'), 'Buyer Province');
+            requiredField(document.getElementById('buyeraddress'), 'Buyer Address');
+            requiredField(document.getElementById('buyerregistrationtype'), 'Buyer Registration Type');
+
+            const itemRows = document.querySelectorAll('.item-row');
+            if (itemRows.length === 0) {
+                errors.push('At least one item');
+            }
+
+            itemRows.forEach((row, index) => {
+                const prefix = `Item ${index + 1}`;
+                requiredField(row.querySelector('.item-hsCode'), `${prefix}: HS Code`);
+                requiredField(row.querySelector('.item-productDescription'), `${prefix}: Product Description`);
+                requiredField(row.querySelector('.item-rate'), `${prefix}: Rate`);
+                requiredField(row.querySelector('.item-uoM'), `${prefix}: Unit of Measure`);
+                requiredField(row.querySelector('.item-quantity'), `${prefix}: Quantity`);
+                requiredField(row.querySelector('.item-totalValues'), `${prefix}: Total Values`);
+                requiredField(row.querySelector('.item-valueSalesExcludingST'), `${prefix}: Value Sales Excluding ST`);
+                requiredField(row.querySelector('.item-salesTaxApplicable'), `${prefix}: Sales Tax Applicable`);
+                requiredField(row.querySelector('.item-saleType'), `${prefix}: Sale Type`);
+                requiredField(row.querySelector('.item-fixedNotifiedValueOrRetailPrice'), `${prefix}: Fixed Notified Value/Retail Price`);
+                requiredField(row.querySelector('.item-salesTaxWithheldAtSource'), `${prefix}: Sales Tax Withheld at Source`);
+                requiredField(row.querySelector('.item-furtherTax'), `${prefix}: Further Tax`);
+                requiredField(row.querySelector('.item-fedPayable'), `${prefix}: FED Payable`);
+                requiredField(row.querySelector('.item-discount'), `${prefix}: Discount`);
+            });
+
+            if (errors.length > 0) {
+                showStatus('response-status', `Please fill required fields: ${errors.join(', ')}`, 'error');
+                return false;
+            }
+
+            return true;
+        }
+
         async function getAccessToken() {
             const baseUrl = document.getElementById('fbr_base_url').value;
             const clientId = document.getElementById('client_id').value;
@@ -553,6 +620,10 @@
             
             if (!accessToken) {
                 showStatus('response-status', 'Please enter or save an access token first!', 'error');
+                return;
+            }
+
+            if (!validateInvoiceForm()) {
                 return;
             }
 
