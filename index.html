@@ -404,7 +404,12 @@
                             </div>
                             <div class="form-group">
                                 <label>SRO Schedule No:</label>
-                                <input type="text" class="item-sroScheduleNo" value="6th Schd Table I" readonly>
+                                <select class="item-sroScheduleNo-select">
+                                    <option value="6th Schd Table I" selected>6th Schd Table I</option>
+                                    <option value="">Blank</option>
+                                    <option value="__custom__">Custom</option>
+                                </select>
+                                <input type="text" class="item-sroScheduleNo-custom" placeholder="Custom SRO Schedule No" disabled>
                             </div>
                             <div class="form-group">
                                 <label>FED Payable:</label>
@@ -416,7 +421,12 @@
                             </div>
                             <div class="form-group">
                                 <label>SRO Item Serial No:</label>
-                                <input type="text" class="item-sroItemSerialNo" value="45" readonly>
+                                <select class="item-sroItemSerialNo-select">
+                                    <option value="45" selected>45</option>
+                                    <option value="">Blank</option>
+                                    <option value="__custom__">Custom</option>
+                                </select>
+                                <input type="text" class="item-sroItemSerialNo-custom" placeholder="Custom SRO Item Serial No" disabled>
                             </div>
                         </div>
                         <button class="btn remove-item-btn" onclick="this.parentElement.remove();">Remove Item</button>
@@ -449,6 +459,32 @@
 
         function stripGroupSeparators(rawValue) {
             return String(rawValue || "").replace(/,/g, "").trim();
+        }
+
+        function syncCustomSelect(selectEl, inputEl) {
+            if (!selectEl || !inputEl) return;
+            const isCustom = selectEl.value === "__custom__";
+            inputEl.disabled = !isCustom;
+            if (!isCustom) {
+                inputEl.value = "";
+            }
+        }
+
+        function attachCustomSelectHandlers(root = document) {
+            const pairs = [
+                { select: ".item-sroScheduleNo-select", input: ".item-sroScheduleNo-custom" },
+                { select: ".item-sroItemSerialNo-select", input: ".item-sroItemSerialNo-custom" }
+            ];
+
+            pairs.forEach(({ select, input }) => {
+                root.querySelectorAll(select).forEach((selectEl) => {
+                    if (selectEl.dataset.customBound === "true") return;
+                    selectEl.dataset.customBound = "true";
+                    const inputEl = selectEl.closest(".form-group")?.querySelector(input);
+                    syncCustomSelect(selectEl, inputEl);
+                    selectEl.addEventListener("change", () => syncCustomSelect(selectEl, inputEl));
+                });
+            });
         }
 
         function attachGroupedNumberFormatting(root = document) {
@@ -685,6 +721,19 @@
             const itemRows = document.querySelectorAll('.item-row');
             
             itemRows.forEach(row => {
+                const sroScheduleSelect = row.querySelector('.item-sroScheduleNo-select');
+                const sroScheduleCustom = row.querySelector('.item-sroScheduleNo-custom');
+                const sroItemSelect = row.querySelector('.item-sroItemSerialNo-select');
+                const sroItemCustom = row.querySelector('.item-sroItemSerialNo-custom');
+
+                const sroScheduleNo = sroScheduleSelect?.value === "__custom__"
+                    ? (sroScheduleCustom?.value || "")
+                    : (sroScheduleSelect?.value || "");
+
+                const sroItemSerialNo = sroItemSelect?.value === "__custom__"
+                    ? (sroItemCustom?.value || "")
+                    : (sroItemSelect?.value || "");
+
                 items.push({
                     hsCode: row.querySelector('.item-hsCode').value || '',
                     productDescription: row.querySelector('.item-productDescription').value || '',
@@ -699,10 +748,10 @@
                     salesTaxWithheldAtSource: stripGroupSeparators(row.querySelector('.item-salesTaxWithheldAtSource').value || '0.00'),
                     extraTax: row.querySelector('.item-extraTax').value || '',
                     furtherTax: stripGroupSeparators(row.querySelector('.item-furtherTax').value || '0.00'),
-                    sroScheduleNo: row.querySelector('.item-sroScheduleNo').value || '',
+                    sroScheduleNo: sroScheduleNo,
                     fedPayable: stripGroupSeparators(row.querySelector('.item-fedPayable').value || '0.00'),
                     discount: stripGroupSeparators(row.querySelector('.item-discount').value || '0.00'),
-                    sroItemSerialNo: row.querySelector('.item-sroItemSerialNo').value || ''
+                    sroItemSerialNo: sroItemSerialNo
                 });
             });
 
@@ -808,7 +857,12 @@
                     </div>
                     <div class="form-group">
                         <label>SRO Schedule No:</label>
-                        <input type="text" class="item-sroScheduleNo" value="6th Schd Table I" readonly>
+                        <select class="item-sroScheduleNo-select">
+                            <option value="6th Schd Table I" selected>6th Schd Table I</option>
+                            <option value="">Blank</option>
+                            <option value="__custom__">Custom</option>
+                        </select>
+                        <input type="text" class="item-sroScheduleNo-custom" placeholder="Custom SRO Schedule No" disabled>
                     </div>
                     <div class="form-group">
                         <label>FED Payable:</label>
@@ -820,13 +874,19 @@
                     </div>
                     <div class="form-group">
                         <label>SRO Item Serial No:</label>
-                        <input type="text" class="item-sroItemSerialNo" value="45" readonly>
+                        <select class="item-sroItemSerialNo-select">
+                            <option value="45" selected>45</option>
+                            <option value="">Blank</option>
+                            <option value="__custom__">Custom</option>
+                        </select>
+                        <input type="text" class="item-sroItemSerialNo-custom" placeholder="Custom SRO Item Serial No" disabled>
                     </div>
                 </div>
                 <button class="btn remove-item-btn" onclick="this.parentElement.remove();">Remove Item</button>
             `;
             container.appendChild(newItem);
             attachGroupedNumberFormatting(newItem);
+            attachCustomSelectHandlers(newItem);
         }
 
         function showStatus(elementId, message, type) {
@@ -843,6 +903,7 @@
         // Load config on page load
         loadConfig();
         attachGroupedNumberFormatting();
+        attachCustomSelectHandlers();
     </script>
 </body>
 </html>
