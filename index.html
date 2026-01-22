@@ -423,6 +423,35 @@
         // Initialize
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('invoicedate').value = today;
+
+        function formatWithGroupSeparator(rawValue) {
+            const cleaned = String(rawValue || "").replace(/,/g, "");
+            if (cleaned === "") return "";
+            const parts = cleaned.split(".");
+            const integerPart = parts[0].replace(/\D/g, "");
+            const decimalPart = parts.length > 1 ? parts[1].replace(/\D/g, "") : "";
+            const withCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return decimalPart ? `${withCommas}.${decimalPart}` : withCommas;
+        }
+
+        function attachGroupedNumberFormatting(root = document) {
+            const targets = root.querySelectorAll(
+                ".item-totalValues, .item-valueSalesExcludingST, .item-salesTaxApplicable, .item-salesTaxWithheldAtSource"
+            );
+            targets.forEach((input) => {
+                if (input.dataset.grouped === "true") return;
+                input.dataset.grouped = "true";
+                input.value = formatWithGroupSeparator(input.value);
+                input.addEventListener("input", (event) => {
+                    const cursorEnd = event.target.selectionEnd;
+                    event.target.value = formatWithGroupSeparator(event.target.value);
+                    event.target.setSelectionRange(cursorEnd, cursorEnd);
+                });
+                input.addEventListener("blur", (event) => {
+                    event.target.value = formatWithGroupSeparator(event.target.value);
+                });
+            });
+        }
         
         // Load saved config
         function loadConfig() {
@@ -708,6 +737,7 @@
                 <button class="btn remove-item-btn" onclick="this.parentElement.remove();">Remove Item</button>
             `;
             container.appendChild(newItem);
+            attachGroupedNumberFormatting(newItem);
         }
 
         function showStatus(elementId, message, type) {
@@ -723,6 +753,7 @@
 
         // Load config on page load
         loadConfig();
+        attachGroupedNumberFormatting();
     </script>
 </body>
 </html>
