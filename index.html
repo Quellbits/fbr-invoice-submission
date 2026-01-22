@@ -238,7 +238,7 @@
                 <h2>🔐 Authentication</h2>
                 <div class="form-group">
                     <label>Access Token (or get new one below):</label>
-                    <input type="text" id="access_token_input" placeholder="Enter your access token">
+                    <input type="text" id="access_token_input" value="9bad1dcc-914f-3b23-96c4-a22c758a2ee8">
                 </div>
                 <button class="btn" onclick="saveToken()">💾 Save Token</button>
                 <button class="btn btn-success" onclick="getAccessToken()">Get New Access Token</button>
@@ -464,10 +464,12 @@
             const config = JSON.parse(localStorage.getItem('fbr_config') || '{}');
             if (config.fbr_base_url) document.getElementById('fbr_base_url').value = config.fbr_base_url;
             if (config.client_id) document.getElementById('client_id').value = config.client_id;
-            if (config.access_token) {
-                document.getElementById('access_token_input').value = config.access_token;
+            const hardcodedToken = "9bad1dcc-914f-3b23-96c4-a22c758a2ee8";
+            const token = config.access_token || hardcodedToken;
+            if (token) {
+                document.getElementById('access_token_input').value = token;
                 document.getElementById('token-display').style.display = 'block';
-                document.getElementById('token-display').textContent = 'Token: ' + config.access_token.substring(0, 30) + '...';
+                document.getElementById('token-display').textContent = 'Token: ' + token.substring(0, 30) + '...';
             }
         }
 
