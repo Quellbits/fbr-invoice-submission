@@ -313,22 +313,14 @@
                             <option value="Punjab">Punjab</option>
                             <option value="Balochistan">Balochistan</option>
                             <option value="Khyber Pakhtunkhwa">Khyber Pakhtunkhwa</option>
-                            <option value="Islamabad">Islamabad (ICT)</option>
-                            <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
-                            <option value="Azad Kashmir">Azad Jammu &amp; Kashmir</option>
-                            <option value="FATA">FATA / PATA</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Buyer Registration Type:</label>
                         <select id="buyerregistrationtype">
                             <option value="" selected disabled>Select registration type</option>
-                            <option value="Registered">Registered (Sales Tax)</option>
+                            <option value="Registered">Registered</option>
                             <option value="Unregistered">Unregistered</option>
-                            <option value="Consumer">Consumer</option>
-                            <option value="AJK Registered">AJK Registered</option>
-                            <option value="FATA/PATA">FATA / PATA</option>
-                            <option value="Foreign">Foreign</option>
                         </select>
                     </div>
                 </div>
@@ -771,19 +763,19 @@
             const invoiceDate = document.getElementById('invoicedate').value;
 
             return {
-                invoicetype: document.getElementById('invoicetype').value || '',
-                invoicedate: invoiceDate,
+                invoiceType: document.getElementById('invoicetype').value || '',
+                invoiceDate: invoiceDate,
                 __invariant: 'Items[0].Quantity',
-                invoicerefno: document.getElementById('invoicerefno').value || '',
-                sellerntncnic: document.getElementById('sellerntncnic').value || '',
-                sellerbusinessname: document.getElementById('sellerbusinessname').value || '',
-                sellerprovince: document.getElementById('sellerprovince').value || '',
-                selleraddress: document.getElementById('selleraddress').value || '',
-                buyerntncnic: document.getElementById('buyerntncnic').value || '',
-                buyerbusinessname: document.getElementById('buyerbusinessname').value || '',
-                buyerprovince: document.getElementById('buyerprovince').value || '',
-                buyeraddress: document.getElementById('buyeraddress').value || '',
-                buyerregistrationtype: document.getElementById('buyerregistrationtype').value || '',
+                invoiceRefNo: document.getElementById('invoicerefno').value || '',
+                sellerNTNCNIC: document.getElementById('sellerntncnic').value || '',
+                sellerBusinessName: document.getElementById('sellerbusinessname').value || '',
+                sellerProvince: document.getElementById('sellerprovince').value || '',
+                sellerAddress: document.getElementById('selleraddress').value || '',
+                buyerNTNCNIC: document.getElementById('buyerntncnic').value || '',
+                buyerBusinessName: document.getElementById('buyerbusinessname').value || '',
+                buyerProvince: document.getElementById('buyerprovince').value || '',
+                buyerAddress: document.getElementById('buyeraddress').value || '',
+                buyerRegistrationType: document.getElementById('buyerregistrationtype').value || '',
                 items: items
             };
         }
